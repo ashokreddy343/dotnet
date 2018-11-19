@@ -310,3 +310,50 @@ RoutePrefix attribute in Web API
 	How to override the route prefix
 		Use ~ character to override the route prefix
 Web API attribute routing constraints
+Web API attribute routing constraints
+
+[Route("{id:int}")]
+public Student Get(int id)
+{
+    return students.FirstOrDefault(s => s.Id == id);
+}
+
+[Route("{name:alpha}")]
+public Student Get(string name)
+{
+    return students.FirstOrDefault(s => s.Name.ToLower() == name.ToLower());
+}	
+
+Generating links using route names in asp.net web api
+public HttpResponseMessage Post(Student student)
+{
+    students.Add(student);
+    var response = Request.CreateResponse(HttpStatusCode.Created);
+    response.Headers.Location = new
+                Uri(Url.Link("GetStudentById", new { id = student.Id }));
+    return response;
+}
+
+IHttpActionResult vs HttpResponseMessage
+	1.In Web API 1, we have HttpResponseMessage type that a controller action method returns	
+	2.A new type called "IHttpActionResult" is introduced in Web API 2 that can be returned from a controller action method.
+There are 2 main advantages of using the IHttpActionResult interface.
+	1.The code is cleaner and easier to read
+	2.Unit testing controller action methods is much simpler. 
+public IHttpActionResult Get(int id)
+{
+  var student=students.FirstOrDefault(s=>s.Id===id);
+  if(student==null)
+  {
+    return Content(HttpStatusCode.NotFound,"Student not found");
+  }
+   return Ok(student);
+}
+
+In addition to Ok() and NotFound() helper methods
+	1.BadRequest()
+	2.Conflict()
+	3.Created()
+	4.InternalServeError()
+	5.Redirect()
+	6.Unauthorized()
