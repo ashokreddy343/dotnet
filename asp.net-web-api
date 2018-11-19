@@ -1,0 +1,312 @@
+What is ASP.NET Web API
+	1.The term API stands for Application Programming Interface.
+	2.These services can then be consumed by a broad range of clients like
+		a)browsers b)Mobile applications c)Desktop Application d)Web Applications e)IOT Applications
+
+What are RESTful services
+	1.REST stands for Representational State Transfer. 
+	2.REST was first introduced in the year 2000 by Roy Fielding as part of his doctoral dissertation
+	3.REST is an architectural pattern for creating an API that uses HTTP as its underlying communication method.
+	Here is the REST Constraints
+		1.Client Server Constraint
+		2.Stateless constraint
+		3.Cacheable constraint
+		4.Uniform Interface
+HTTP GET PUT POST DELETE
+	Request Verbs
+		get,post,put,delete
+	Request Headers
+		 The request header contains additional information such as what type of response is required
+		 ex:JSON,XML
+	Request Body
+		Request Body contains the data to send to the server.
+		The data format may be in XML or JSON.
+	Response Body
+		if the request is for a specific product, the response body includes product details either in XML or JSON format.
+	Response Status Codes
+		Some of the common status codes are 200/OK, 404/Not Found, 204/No Content.
+
+ASP.NET Web API Content Negotiation
+
+	Using the Accept header the client can specify the format for the response.
+	Accept: application/xml returns XML
+	Accept: application/json returns JSON
+	Depending on the Accept header value in the request, the server sends the response. This is called Content Negotiation.
+	if the client has requested for XML data, Web API uses XML formatter.
+	if the client has requested for JSON data, Web API uses JSON formatter
+	These formatters are called Media type formatters.
+	Accept: application/xml,application/json.(Multiple values can also be specified foe the Accept header)
+	Accept:application/xml;q=0.8,application/json;q=0.5
+	If you don't specify the Accept header, by default the Web API returns JSON data.
+	WebApiConfig.cs file in App_Start folder.
+	config.Formatters.JsonFormatter.SerializerSettings.Formatting =
+                            Newtonsoft.Json.Formatting.Indented;
+	config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
+    		new CamelCasePropertyNamesContractResolver();
+
+ASP.NET Web API MediaTypeFormatter
+	MediaTypeFormatter is an abstract class from which JsonMediaTypeFormatter and XmlMediaTypeFormatter classes inherit from.
+	 JsonMediaTypeFormatter handles JSON and XmlMediaTypeFormatter handles XML.
+	How to return only JSON from ASP.NET Web API Service irrespective of the Accept header value
+		config.Formatters.Remove(config.Formatters.XmlFormatter);
+	How to return only XML from ASP.NET Web API Service irrespective of the Accept header value
+		config.Formatters.Remove(config.Formatters.JsonFormatter);
+	config.Formatters.JsonFormatter.SupportedMediaTypes
+	    .Add(new MediaTypeHeaderValue("text/html"));
+	public class CustomJsonFormatter : JsonMediaTypeFormatter
+	{
+	    public CustomJsonFormatter()
+	    {
+        	this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+    	}
+
+    	public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+    	{
+        	base.SetDefaultContentHeaders(type, headers, mediaType);
+        	headers.ContentType = new MediaTypeHeaderValue("application/json");
+    	}
+	}		
+	Register the formatter: Place the following line in Register() method of WebApiConfig.cs file in App_Start folder
+	config.Formatters.Add(new CustomJsonFormatter());
+
+Implementing post method in ASP.NET Web API
+	public HttpResponseMessage Post([FromBody] Employee employee)
+	{
+	    try	
+	    {
+        	using (EmployeeDBEntities entities = new EmployeeDBEntities())
+        	{
+            	entities.Employees.Add(employee);
+            	entities.SaveChanges();
+
+            	var message = Request.CreateResponse(HttpStatusCode.Created, employee);
+	            message.Headers.Location = new Uri(Request.RequestUri +
+                    employee.ID.ToString());
+
+     		   return message;
+        	}
+    	}
+	    catch (Exception ex)
+    	   {
+        	return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+    	   }
+	}
+Here are the important points to remember
+	If a method return type is void, by default status code 204 No Content is returned.
+	When a new item is created, we should be returning status code 201 Item Created.
+	With 201 status code we should also include the location i.e URI of the newly created item. 
+	When an item is not found, instead of returning NULL and status code 200 OK, return 404 Not Found status code along with a meaningful message such as "Employee with Id = 101 not found"
+
+Implementing Delete method in ASP.NET Web API
+	public HttpResponseMessage Delete(int id)
+	{
+    		try
+    		{
+        	using (EmployeeDBEntities entities = new EmployeeDBEntities())
+        	{
+	            var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+        	    if (entity == null)
+            		{
+                	 return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                          "Employee with Id = " + id.ToString() + " not found to delete");
+                 	}
+            	else
+            	{	
+                	entities.Employees.Remove(entity);
+                	entities.SaveChanges();
+	                return Request.CreateResponse(HttpStatusCode.OK);
+            	 }	
+        	}
+	    }
+    	catch (Exception ex)
+    	{
+        	return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+    	}
+	}	
+
+Implementing PUT method in ASP.NET Web API
+	public HttpResponseMessage Put(int id, [FromBody]Employee employee)
+{
+    try
+    {
+        using (EmployeeDBEntities entities = new EmployeeDBEntities())
+        {
+            var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+            if (entity == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                    "Employee with Id " + id.ToString() + " not found to update");
+            }
+            else
+            {
+                entity.FirstName = employee.FirstName;
+                entity.LastName = employee.LastName;
+                entity.Gender = employee.Gender;
+                entity.Salary = employee.Salary;
+
+                entities.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, entity);
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+    }
+}
+
+
+Custom method names in ASP.NET Web API
+ASP.NET Web API query string parameters
+FromBody and FromUri in Web API
+	1.If the parameter is a simple type like int, bool, double, etc., Web API tries to get the value from the URI (Either from route data or Query String)
+	2.If the parameter is a complex type like Customer, Employee etc., Web API tries to get the value from the request body
+	3.We have decorated id parameter with [FromBody] attribute, this forces Web API to get it from the request body
+	4.We have decorated employee parameter with [FromUri] attribute, this forces Web API to get employee data from the URI (i.e Route data or Query String)
+
+Calling ASP.NET Web API service in a cross domain using jQuery ajax
+	The following 2 URLs have the same origin
+		http://localhost:1234/api/employees
+		http://localhost:1234/Employees.html
+The following 2 URLs have different origins, because they have different port numbers (1234 v/s 5678)
+	http://localhost:1234/api/employees
+	http://localhost:5678/Employees.html
+The following 2 URLs have different origins, because they have different domains (.com v/s .net)
+	http://pragimtech.com/api/employees
+	http://pragimtech.net/Employees.html
+The following 2 URLs have different origins, because they have different schemes (http v/s https)
+	https://pragimtech.com/api/employees
+	http://pragimtech.net/Employees.html
+
+Cross-origin resource sharing ASP.NET Web API
+	Step 1 : Install Microsoft.AspNet.WebApi.Cors package. 
+	  Execute the following command using NuGet Package Manager Console. 
+	Step 2 : Include the following 2 lines of code in Register() method 
+	   of WebApiConfig class in WebApiConfig.cs file in App_Start folder
+	EnableCorsAttribute cors=new EnableCorsAttribute("*","*","*");
+	config.EnableCors();
+	2. Apply the  EnableCorsAttribute on the controller class
+	[EnableCorsAttribute("*", "*", "*")]
+	public class EmployeesController : ApiController
+	{
+	}
+	To disable CORS for a specific action apply [DisableCors] on that specific action
+
+ASP.NET Web API enable HTTPS
+	Step 1 : Right click on the ASP.NET Web API project and add a class file. 
+	         Name it RequireHttpsAttribute. Copy and paste the following code 
+	using System;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
+
+namespace EmployeeService
+{
+    public class RequireHttpsAttribute : AuthorizationFilterAttribute
+    {
+        public override void OnAuthorization(HttpActionContext actionContext)
+        {
+            if (actionContext.Request.RequestUri.Scheme != Uri.UriSchemeHttps)
+            {
+                actionContext.Response = actionContext.Request
+                    .CreateResponse(HttpStatusCode.Found);
+                actionContext.Response.Content = new StringContent
+                    ("<p>Use https instead of http</p>", Encoding.UTF8, "text/html");
+
+                UriBuilder uriBuilder = new UriBuilder(actionContext.Request.RequestUri);
+                uriBuilder.Scheme = Uri.UriSchemeHttps;
+                uriBuilder.Port = 44337;
+
+                actionContext.Response.Headers.Location = uriBuilder.Uri;
+            }
+            else
+            {
+                base.OnAuthorization(actionContext);
+            }
+        }
+    }
+}
+
+	Step 2 : Include the following line of code in Register() method of WebApiConfig class in 
+	WebApiConfig.cs file in App_Start folder. This adds RequireHttpsAttribute as a filter to the 
+	filters collection. So for every request the code in this filter is executed. If the request is issued using HTTP, it will be automatically redirected to HTTPS.
+	config.Filters.Add(new RequireHttpsAttribute());
+
+Implementing basic authentication in ASP.NET Web API
+	sing System;
+using System.Net;
+using System.Net.Http;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
+
+namespace EmployeeService
+{
+    public class BasicAuthenticationAttribute : AuthorizationFilterAttribute
+    {
+        public override void OnAuthorization(HttpActionContext actionContext)
+        {
+            if (actionContext.Request.Headers.Authorization == null)
+            {
+                actionContext.Response = actionContext.Request
+                    .CreateResponse(HttpStatusCode.Unauthorized);
+            }
+            else
+            {
+                string authenticationToken = actionContext.Request.Headers
+                                            .Authorization.Parameter;
+                string decodedAuthenticationToken = Encoding.UTF8.GetString(
+                    Convert.FromBase64String(authenticationToken));
+                string[] usernamePasswordArray = decodedAuthenticationToken.Split(':');
+                string username = usernamePasswordArray[0];
+                string password = usernamePasswordArray[1];
+
+                if (EmployeeSecurity.Login(username, password))
+                {
+                    Thread.CurrentPrincipal = new GenericPrincipal(
+                        new GenericIdentity(username), null);
+                }
+                else
+                {
+                    actionContext.Response = actionContext.Request
+                        .CreateResponse(HttpStatusCode.Unauthorized);
+                }
+            }
+        }
+    }
+}
+	config.Filters.Add(new RequireHttpsAttribute());
+
+ASP.NET Web API token authentication
+
+Attribute routing in ASP.NET Web API 2
+	Using the [Route] attribute to define routes is called Attribute Routing
+
+What are the advantages of using Attribute Routing
+	Attribute routing gives us more control over the URIs than convention-based routing.
+	[Route("api/students/{id}/courses")]
+	How to enable Attribute Routing
+		config.MapHttpAttributeRoutes();
+Can we use both Attribute Routing and Convention-based routing in a single Web API project
+	Yes, both the routing mechanisms can be combined in a single Web API project. 
+	The controller action methods that have the [Route] attribute uses Attribute Routing, 
+	and the others without [Route] attribute uses Convention-based routing. 
+RoutePrefix attribute in Web API
+	The common prefix "api/students" can be specified for the entire controller using the [RoutePrefix] 
+	attribute as shown below. 
+	This eliminates the need to repeat the common prefix "api/students" on every 
+	controller action method.
+	To override the RoutePrefix use ~ as shown below
+	[Route("~/api/teachers")]
+	What is the use of RoutePrefix attribute ?
+		RoutePrefix attribute is used to specify the common route prefix 
+		at the controller level to eliminate the need to repeat that common route 
+		prefix on every controller action method
+	How to override the route prefix
+		Use ~ character to override the route prefix
+Web API attribute routing constraints
