@@ -69,3 +69,49 @@ Write a code snippet to register exveption filters globally?
 
 How to enable Tracing in Web API ?
 	config.EnableSystemDiagnosticsTracing();
+
+Can we return view from Web API ?
+	No.We cannot return view from Web API.
+ What do you mean by Under-Posting and Over-Posting in Web API ?
+	Under-Posting:When client leaves out some of the properties while binding
+			then it's called under-posting
+	Over-Posting:When the client sends more data than expected in binding 
+			then this process is called over-posting
+What is BSON in Web API ?
+	BSON:it is a binary serialization format that serializes objects to key-value pair as in JSON
+	BSON: stands for Binary JSON
+	BSON is a light weight fast in encoding and decoding
+How we can enable BSON ?
+	BSON : To enable BSON we need to Add BsonMediaTypeFormatter in web.api config
+	config.Formatters.Add(new BsonMediaTypeFormatter());
+	
+Why api/ segment is used in Web API routing?
+	api/:it is used to avoid collisions with ASP.NET MVC routing
+
+Can we use Web API in webforms ?
+	yes,Web API is bundled with ASP.NET Mvc framework but still way to 
+	use with ASP.NET Web Form.
+	it can be done in three simple steps
+	1.Create a Web API Controller
+	2.Add a routing table to Application_Start method of Gloabla.asax
+	3.Make a Jquery AJAX call to WEb API method and get data
+How to set principal to Authenticate in Web API ?
+	Thread.CurrentPrinicpal this property is the standard way to
+	   set the threads principle in .NET
+	HttpContenxt.Current.User This property is specified to ASP.NET
+How to deal with validation errors in Web API ?
+	1.On validation failure the Web API do not return to client automatically
+	2.So it's controller's duty to check the model state and response to that
+	3.we can create a custom action filter for handling the same
+What is media types in Web API ?
+	1.A media type,also called a MIME type,idenitifes the format of 
+	 a piece of data
+	2.In HTTp,media types describe the format of the message body
+	3.ex: text/html,image/png,application/json
+How to add a Media Formatter to the Web API Pipeline ?
+How parameter binding works in Web API ?
+	1.if it is simple parameters like bool,int,double etc.then value will
+	  be obtained from the URL
+	2.in case of complex types value read from message body
+Namespace for IHttpActionResult return type in Web API ?
+	System.Web.Http.Results
