@@ -1,0 +1,71 @@
+What is WEB API ?
+	Web API is a framework which helps you to build/develop HTTP Services
+What are the advantages of Web API ?
+	OData
+	Filters
+	Content Negotiation
+	Self-Hosting
+	Routing
+	Model Bindings
+What are the main return types supported in web API ?
+	1.Void:it will retunr empty content
+	2.HttpResponseMessage:it will convert the response to an HTTP message
+	3.HttpActionResult:internally calls ExecueAsync to create HttpResponseMessage
+
+Web API supports which protocal
+	Web app supports HTTP protocol
+
+Whic .NET framework supports web API ?
+	.NET 4.0 and above version supports web api
+
+Web API uses which of the following open-source library for JSON serilization ?
+	Web API uses Json.NET library for JSON serilization.
+
+Status code for all uncaught exception?
+	500 - Internal server Error
+
+What is web API Routing ?
+	Routing is pattern matching like in MVC
+
+How can assign alias name for ASP.NET Web API Action ?
+	we can use ActionName attribute
+	[HttpPost]
+	[ActionName("SavestudentInfo")]
+Web API 2.0 Features
+	OWIN
+	Attribute Routing
+	External Authentication
+	WEB API OData
+How can we pass multiple complex types in WEB API ?
+	Using ArrayList
+	Newtonsoft JArray
+
+How we can handle errors in Web API ?
+	HttpResponse Exception
+	Exception Filters
+	Registering Exception filters
+	HttpError
+
+How to register Web API exception filters ?
+	From Action
+	From Controller
+	Global registraation
+
+Write a code snippet to register exception filters from action ?
+	[NotImplExceptionFilter]
+	public TestCustomer GetMyTestCustomer(int custId)	
+	{
+	  //your code here
+	}
+Write a code snippet to register exception filter from controleer ?
+	[NotImplExceptionFilter]
+	public class TestCustomerController
+	{
+	  //your code goes here
+	}
+
+Write a code snippet to register exveption filters globally?
+	GlobalConfiguration.NotImplExceptionFilterAttribute();
+
+How to enable Tracing in Web API ?
+	config.EnableSystemDiagnosticsTracing();
