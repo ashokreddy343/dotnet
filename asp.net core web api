@@ -1,0 +1,75 @@
+rest-apis-in-aspnet-core
+What is Api
+	1.Api stands for application programming interface through which software
+	  can interact with each other
+HTTP Verbs
+	get
+	post
+	put
+	delete
+JSON
+	1.JSON(Javascript Object Notation) is a lightweight data-interchange format
+	2.it is easy for humans to rad and write.
+	3.And whenever we want to communicate with our api we will use the JSON
+HTTP Status Code
+	1.browser error codes
+	2.interent eror codes
+Content Negotiation
+	1.By default asp.net core returns json format,if you provide xml format also
+	  it returns json format
+	2.In order to get the xml format we can configue add following code in configureservices method
+		services.AddMvc().AddXmlSerializerFormatters();
+	3.accept: application/json or application/xml
+	4.[Produces("application/xml")]
+    	  [Route("api/Products")]
+          public class ProductsController : Controller	
+	5.[Produces("application/json")]
+	  [Route("api/Products")]
+	  public class ProductsController : Controller	
+CustomMethods
+	[HttpGet("LoadWelcomeMessage")]
+Validatio Overview
+	 if (ModelState.IsValid)
+            {
+                customers.Add(customer);
+                return Ok();
+            }
+
+What is Code First Approach ?
+	1.We don't design database
+	2.We don't create tables
+	3.EF is responsible for all kind of things
+Sorting Overview
+Paging
+	1.Provide the page Number
+	2.Provide a page size
+	3.Get all the Record from the database via LINQ queries
+	4.Apply the simple SKIP and Take algorithm to get the sepcific result
+		Skip((page-1)*PAGE_SIZE).Take(page_size);
+Searching overview
+Versioning Overview
+	Types of Versioning
+		Versioning via query String 
+			1.install nuget package
+				Microsoft.AspNetCore.MvcVersioning
+			2.[ApiVersion("1.0")]
+    			  [Produces("application/json")]
+			  [Route("api/movies")]
+		 	  public class MoviesV1Controller : Controller
+    	
+			3.http://localhost:19875/api/movies?api-version=1.0
+		Versioning via URL Path
+			http://localhost:19875/api/v1/movies
+			http://localhost:19875/api/v2/movies
+		Versioning via Media Types
+			http://localhost:19875/api/movies
+				Accept		application/json;v=1.0
+				Put this code in ConfigureService Method
+					services.AddApiVersioning(o=>o.ApiVersionReader=new MediaTypeVersionReader());
+Repository Pattern steps
+	1.Create Interface(IProduct) and add CRUD methods
+	2.Add a ProductRepository class and implement IProduct interface
+	3.All DbContext dependent code goes to ProductRepository
+	4.In the ProductsController call the CRUD methods with the IProduct interface
+Implement Api DOcumenation
+	1.install swashbuckle.aspnetcore
