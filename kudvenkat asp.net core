@@ -1,0 +1,74 @@
+What is ASP.NET Core ?
+	1.ASP.NET Core is a cross-platform high-performance,open-source
+	  framework forbuilding modern,cloud-based,internet-conected applications
+	2.ASP.NET Core is a redesign of ASP.NET 4.x
+ASP.NET Core Benefits and Features
+	1.Cross Platform(Windows,macOS,Linux)
+	2.ASP.NET Core applications can be hosted on
+		IIS,Apache,Docker,Self-host in your own process
+	3.One Unified Programming Model for MVC and Web API
+		a.Both the MVC Controller class and the ASP.NET Web API
+		  Controller class inherit the same Controller base class
+		  and returns IActionResult
+	4.DI
+	5.Testability
+	6.Open-Source
+	7.Modular
+		a.ASP.NET Core Provides Modularity with Middleware components
+		b.Both the request and response pipelines are composed
+		  using the middleware components
+		c.Rich set of built-in middleware components are provided
+		  out of the box
+		d.Custom Middleware Component can be created
+Setting up machine for asp net core development
+Creating asp net core web application
+	It contains different templates
+		asp.net core 2.2
+			1.empty,API,Web Application,Web Application(MVC)
+			   Razor Class Library,Angular,React.js
+			   React.js and Redux
+			2.Configure for HTTPS		
+			3.Enable Docker Support
+		asp.net core 2.1
+			1.empty,API,Web Application,Web Application(MVC)
+			   Razor Class Library,Angular,React.js
+			   React.js and Redux
+			2.Configure for HTTPS
+			3.Enable Docker Support
+		asp.net core 2.0
+			1.empty,API,Web Application,Web Application(MVC)
+			  Angular,React.js,React.js and Redux
+			2.Enable Docker Support
+		asp.net core 1.1
+			1.Empty,API,Web Application(MVC)
+			2.Enable Docker support
+		asp.net core 1.0
+			1.Empty,API,Web Application(MVC)
+			2.Enable Docker support
+ASP.NET core project file
+	1..csproj or .vbproj depending on the programming language used
+	2.No need to unload the project to edit the project file
+	3.File or folder refrences are no longer included in the project file
+	TargetFramework
+		-Specifies the target framework for the application
+		-To specify a target framework we use target framework Moniker(TFM)
+		-Name:.Net Framework Abbreviation:.net TFM:net451,net472
+		-Name:.NET Core      Abbreviation:netcoreapp TFM:netcoreapp1.0,netcore2.2
+	AspNetCoreHostingModel
+		-Specifies how the application should be hosted
+		-InProcess or OutOfProcess
+		-InProcess hosts the app inside of the IIS worker process(s3wp.exe)
+		-OutOfProcess hosting model forward web requests to a
+		 backedn ASP.NET core app running the Kestrel server
+		-The default is OutOfProcess hosting
+	PackageReference
+		a.Used to include a reference to the NuGet package that is 
+		  installed for the application
+		b.Metapackage - Microsoft.AspNetCore.App
+		c.A metapackage has no content of its own
+		d.It just contains a list of dependencies(other packages)
+		e.When the version is not specified,an implicit version is 
+		  specified by the SDK
+		f.Rely on the implicit version rather than explicitly setting
+		  the version number on the package reference
+https://www.youtube.com/watch?v=X60RR34gKy0&index=5&list=PL6n9fhu94yhVkdrusLaQsfERmL_Jh4XmU	
