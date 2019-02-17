@@ -1,0 +1,186 @@
+What is ASP.NET Core ?
+	1.ASP.NET Core is a cross-platform high-performance,open-source
+	  framework forbuilding modern,cloud-based,internet-conected applications
+	2.ASP.NET Core is a redesign of ASP.NET 4.x
+ASP.NET Core Benefits and Features
+	1.Cross Platform(Windows,macOS,Linux)
+	2.ASP.NET Core applications can be hosted on
+		IIS,Apache,Docker,Self-host in your own process
+	3.One Unified Programming Model for MVC and Web API
+		a.Both the MVC Controller class and the ASP.NET Web API
+		  Controller class inherit the same Controller base class
+		  and returns IActionResult
+	4.DI
+	5.Testability
+	6.Open-Source
+	7.Modular
+		a.ASP.NET Core Provides Modularity with Middleware components
+		b.Both the request and response pipelines are composed
+		  using the middleware components
+		c.Rich set of built-in middleware components are provided
+		  out of the box
+		d.Custom Middleware Component can be created
+Setting up machine for asp net core development
+Creating asp net core web application
+	It contains different templates
+		asp.net core 2.2
+			1.empty,API,Web Application,Web Application(MVC)
+			   Razor Class Library,Angular,React.js
+			   React.js and Redux
+			2.Configure for HTTPS		
+			3.Enable Docker Support
+		asp.net core 2.1
+			1.empty,API,Web Application,Web Application(MVC)
+			   Razor Class Library,Angular,React.js
+			   React.js and Redux
+			2.Configure for HTTPS
+			3.Enable Docker Support
+		asp.net core 2.0
+			1.empty,API,Web Application,Web Application(MVC)
+			  Angular,React.js,React.js and Redux
+			2.Enable Docker Support
+		asp.net core 1.1
+			1.Empty,API,Web Application(MVC)
+			2.Enable Docker support
+		asp.net core 1.0
+			1.Empty,API,Web Application(MVC)
+			2.Enable Docker support
+ASP.NET core project file
+	1..csproj or .vbproj depending on the programming language used
+	2.No need to unload the project to edit the project file
+	3.File or folder refrences are no longer included in the project file
+	TargetFramework
+		-Specifies the target framework for the application
+		-To specify a target framework we use target framework Moniker(TFM)
+		-Name:.Net Framework Abbreviation:.net TFM:net451,net472
+		-Name:.NET Core      Abbreviation:netcoreapp TFM:netcoreapp1.0,netcore2.2
+	AspNetCoreHostingModel
+		-Specifies how the application should be hosted
+		-InProcess or OutOfProcess
+		-InProcess hosts the app inside of the IIS worker process(s3wp.exe)
+		-OutOfProcess hosting model forward web requests to a
+		 backedn ASP.NET core app running the Kestrel server
+		-The default is OutOfProcess hosting
+	PackageReference
+		a.Used to include a reference to the NuGet package that is 
+		  installed for the application
+		b.Metapackage - Microsoft.AspNetCore.App
+		c.A metapackage has no content of its own
+		d.It just contains a list of dependencies(other packages)
+		e.When the version is not specified,an implicit version is 
+		  specified by the SDK
+		f.Rely on the implicit version rather than explicitly setting
+		  the version number on the package reference
+Main method in ASP.NET Core
+	1.A Console application usually has a Main() method
+	2.Why do we have a Main() method in ASP.NET Core web application
+	3.ASP.NET Core application initially starts as a Console application
+	4.This Main() method configures ASP.NET Core and starts it and at that
+	  point it becomes an ASP.NET Core web application
+ASP NET Core in process hosting
+	1.Some of the Tasks that CreateDefaultBuilder() performs
+		-Setting up the web server
+		-Loading the host and application configuration from
+		 various configuration sources and
+		-Configuration logging
+	2.InProcess hosting
+		-<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+		-CreateDefaultBuilder method calls UseIIS() method
+		  and host the app inside of the IIS worker process
+		  (w3wp.exe or iisexpress.exe)
+		-InProcess hosting delivers significantly higher request
+		  throughput than OutOfProcess hosting
+	3.With out of process hosting
+		-2 web servers- internal and external web server
+		-the internal web server is kestrel
+		-The external web server can be IIS,Nginx or Apache
+	what is Kestrel
+		-Cross-Platform Web Server for ASP.NET Core
+		-Kestrel can be used,by itself as an edge server
+		-The process used to host the app is dotnet.exe
+ASP NET Core out of process hosting
+	1.Kestrel can be used as the internet facing web server
+	2.Kestrel can be used in combination with a reverse proxy
+	3.System.Diagonstics.Process.GetCurrentProcess().ProcessName
+	In Process v/s Out of Process Hosting
+	In Process
+		1.Process name is w3wp.exe or iisexpress.exe
+		2.only one web server
+		3.Better for performance
+	Out of Process
+		1.Process name is dotnet.exe
+		2.Two web servers
+		3.Penalty of proxying requests between interanl and
+		  external web server
+ASP NET Core launchsettings json file
+	Project-Hosting Setting Ignored Only one web server kestrel
+	IISExpress Inprocess Only one web server IISExpress
+
+ASP NET Core appsettings json file
+Configurations Sources in ASP.NET Core
+	->Files(appsettings.json,appsettings{Enviornment}.json
+	->User secrets
+	->Enviornment varibles
+	->Command-line arguments
+To access configuration information
+	-IConfiguration Service
+Middleware in ASP NET Core
+	1.Has access to both Request and Response
+	2.May simply pass the Request to next Middleware
+	3.May process and then pass the Request to next Middleware
+	4.May handle the Request and short-circuit the pipeline
+	5.May process the outgoing Response
+	6.Middlewares are executed in the order they are added 
+Configure ASP NET Core request processing pipeline
+	1.run-terminal middleware is the last middleware
+	2.Everything that happens before the next() method is invoked
+	  in each of the middleware components,happens as the rquest trvels
+	  from middleware to middleware through the pipeline and this is
+	  represented by the incoming arrow
+	3.When a middleware handles the request and produces response
+	  the request processing pipeline starts to reverse
+	4.Everything that happens after the next() method is invoked
+	  in each of the middleware components,happens as the response trvels
+	  from middleware to middleware through the pipeline and this is
+	  represented by the outgoing arrow
+Static files in asp net core
+	1.By default an ASP.NET Core application will not serve static files
+	2.The default directory for static files is wwwroot
+	3.To serve static files UseStaticFiles() middleware is required
+	4.To serve a default file UseDefaultFiles() middleware is required
+	5.The followinf are the default files
+		index.html
+		index.htm
+		default.htm
+		default.html
+	6.UseDefaultFiles() must be registered before UseStaticFiles()
+	7.UseFileServer combines the functionality of UseStaticFiles,
+	  UseDefaultFiles and UseDirectoryBrowser middleware
+ASP NET Core developer exception page
+	1.To enable plug in UseDevelopeExceptionPage Middleware in the pipeline
+	2.must be plugged in the pipeline as early as possible
+	3.Contains Stack Trace,Query String Cookies and HTTP Headers
+ASP NET Core environment variables
+	1.Development ,staging ,Production
+	2.ASPNETCORE_ENVIORNMENT varibles sets the Runtime Enviornment
+	3.on Staging or Production server we set in the operating system
+	4.Use IHostingEnviornement service to access the runtime enviornment
+	5.Runtime enviornment defaults to Production if not set explicitly
+	6.In addition to standard enviornments(Developmentmstaging,production)
+	  custom enviornments(UAT,QA) etc are also supported
+ASP NET Core MVC tutorial
+	1.MVC is an architectural design pattern for implementing
+	  User Interface Layer of an application
+	2.Model:set of classes that represent data +the logic to manage that
+	        data
+	3.View:Contains the display logic to present the Model data provided
+	       to it by the controller
+	4.Controller:Handles the http request,work with the model,and selects
+		a view to render that model
+Setup mvc in asp net core
+	1.Add the MVC Services to the DI Container
+	  public void ConfigureServices(IServiceCollection services)
+		services.AddMvc()
+	2.Add MVC Middleware to the Request Pipeline
+		public void Configure(ApplicationBuilder app,IHostingEnviornment env)
+			app.UseMvcWithDefaultRoute()
