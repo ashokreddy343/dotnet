@@ -1,0 +1,46 @@
+MVC Versions
+	MVC 1.0 -VS2008-.net3.5 -2009
+		1.MVC architecture with webform engine
+		2.Routing
+		3.HTML Helpers
+		4.Ajax Helpers
+		5.Auto Binding
+	MVC 2.0-VS 2008-.net 3.5/4.0 -2010
+		1.Area
+		2.Asynchronous controller
+		3.Html helper methods with lambda expression
+		4.DataAnnotations attributes
+		5.Client side validation
+		6.Custom template
+	MVC 3.0 -VS 2010 .net 4.0 -2011
+		1.Unobtrusive javascript validation
+		2.Razor View engine
+		3.Global filters
+		4.Remote validation
+		5.Dependency resolver for IoC
+		6.ViewBag
+		7.Support for Multiple View Engines	
+	MVC 4.0 -VS 2010 SP1 ,VS 2012- .net 4.0/4.5 -2012
+		1.Mobile project template
+		2.Bundling and minification
+		3.Support for Windows Azure SDK
+		4.ASP.NET Web API
+		5.Many new features to support mobile apps
+		6.Enhanced support for asynchronous methods
+	MVC 5.0
+		1.One ASP.NET
+		2.Attribute based identity
+		3.Asp.net Identity
+		4.Bootstrap in the MVC templated
+		5.Authentication filters
+		6.Filter overrides
+	MVC 6.0
+		1.ASP.NET MVC and Web API has been merged in to one.
+		2.Dependency injection is inbuilt and part of MVC
+		3.Side by side - deploy the runtime and framework with your application
+		4.Everything packaged with NuGet, Including the .NET runtime itself.
+		5.New JSON based project structure.
+		6.No need to recompile for every change. Just hit save and refresh the browser.
+		7.Compilation done with the new Roslyn real-time compiler.
+		8.vNext is Open Source via the .NET Foundation and is taking public contributions
+		9.vNext (and Rosyln) also runs on Mono, on both Mac and Linux today.
